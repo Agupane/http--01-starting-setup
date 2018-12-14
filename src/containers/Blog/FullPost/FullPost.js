@@ -5,31 +5,40 @@ import './FullPost.css';
 class FullPost extends Component {
 
     state = {
-      loadedPost: null
+        loadedPost: null
     };
 
 
+    componentDidMount = async() =>{
+        console.log("[FullPost.js] componentDidUpdate",this.props);
+        await this.loadData();
+    };
+
     componentDidUpdate = async() =>{
+        await this.loadData();
+    };
+
+    loadData = async() =>{
         let response;
-        if(this.props.id) {
-            if(!this.state.loadedPost || this.props.id !== this.state.loadedPost.id) {
-                response = await axios.get('/posts/' + this.props.id);
+        if ( this.props.match.params.id ) {
+            if ( !this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id != this.props.match.params.id) ) {
+                response = await axios.get( '/posts/' + this.props.match.params.id );
                 this.setState({loadedPost: response.data});
             }
         }
-
     };
+
 
     deletePostHandler = async() =>{
         let response;
-        response = await axios.delete("/posts/"+this.props.id);
+        response = await axios.delete("/posts/"+this.props.match.params.id);
         console.log("Delete response: ", response);
     };
 
 
     render () {
         let post = <p style={{textAlign: 'center'}}>Please select a Post!</p>;
-        if(this.props.id) {
+        if(this.props.match.params.id) {
             post = <p style={{textAlign: 'center'}}>Loading...!</p>;
         }
         if(this.state.loadedPost){

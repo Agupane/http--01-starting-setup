@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './NewPost.css';
+import { Redirect } from 'react-router-dom';
 
 class NewPost extends Component {
     state = {
@@ -17,7 +18,9 @@ class NewPost extends Component {
             author: this.state.author
         };
         response = await axios.post('https://jsonplaceholder.typicode.com/posts', post);
-        console.log("Response: ", response);
+        this.setState({submitted: true});
+        console.log("Post submitted, redirecting...");
+        this.props.history.replace('/posts');
     };
 
     render () {
